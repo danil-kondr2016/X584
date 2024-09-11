@@ -40,7 +40,7 @@ __published:	// IDE-managed Components
     void __fastcall CheckBoxClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
-    int Value;      //введенное значение
+    int Value;      //РІРІРµРґРµРЅРЅРѕРµ Р·РЅР°С‡РµРЅРёРµ
     __fastcall TInputForm(TComponent* Owner);
 };
 //---------------------------------------------------------------------------

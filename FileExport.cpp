@@ -14,33 +14,33 @@ TExportThread::TExportThread(bool CreateSuspended)
 void __fastcall TExportThread::Execute()
 {
     X584Form->WordItem->Enabled = false;
-    //соединяемся с сервером автоматизации
+    //СЃРѕРµРґРёРЅСЏРµРјСЃСЏ СЃ СЃРµСЂРІРµСЂРѕРј Р°РІС‚РѕРјР°С‚РёР·Р°С†РёРё
     CoInitialize(NULL);
     X584Form->WordApplication->Connect();
-    //создаем новый документ и отключаем проверку орфографии
+    //СЃРѕР·РґР°РµРј РЅРѕРІС‹Р№ РґРѕРєСѓРјРµРЅС‚ Рё РѕС‚РєР»СЋС‡Р°РµРј РїСЂРѕРІРµСЂРєСѓ РѕСЂС„РѕРіСЂР°С„РёРё
     X584Form->WordApplication->Documents->Add(EmptyParam, EmptyParam, EmptyParam, EmptyParam);
     X584Form->WordDocument->ConnectTo(X584Form->WordApplication->ActiveDocument);
     X584Form->WordApplication->Options->CheckSpellingAsYouType = False;
     X584Form->WordApplication->Options->CheckGrammarAsYouType = False;
-    //записываем заголовок
+    //Р·Р°РїРёСЃС‹РІР°РµРј Р·Р°РіРѕР»РѕРІРѕРє
     X584Form->WordApplication->Selection->Font->Size = 14;
     X584Form->WordApplication->Selection->Font->Bold = true;
     X584Form->WordApplication->Selection->ParagraphFormat->Alignment = wdAlignParagraphCenter;
     X584Form->WordApplication->Selection->TypeText(StringToOleStr(X584Form->Caption + "\n"));
-    //записываем дату и время создания
+    //Р·Р°РїРёСЃС‹РІР°РµРј РґР°С‚Сѓ Рё РІСЂРµРјСЏ СЃРѕР·РґР°РЅРёСЏ
     TDateTime dt = Now();
     X584Form->WordApplication->Selection->Font->Size = 12;
     X584Form->WordApplication->Selection->Font->Bold = false;
     X584Form->WordApplication->Selection->Font->Italic = true;
     X584Form->WordApplication->Selection->ParagraphFormat->Alignment = wdAlignParagraphLeft;
-    X584Form->WordApplication->Selection->TypeText(StringToOleStr("\nДата создания: " + DateToStr(dt) + "\n"));
-    X584Form->WordApplication->Selection->TypeText(StringToOleStr("Время создания: " + TimeToStr(dt) + "\n\n"));
-    //определяем количество используемых строк
+    X584Form->WordApplication->Selection->TypeText(StringToOleStr("\nР”Р°С‚Р° СЃРѕР·РґР°РЅРёСЏ: " + DateToStr(dt) + "\n"));
+    X584Form->WordApplication->Selection->TypeText(StringToOleStr("Р’СЂРµРјСЏ СЃРѕР·РґР°РЅРёСЏ: " + TimeToStr(dt) + "\n\n"));
+    //РѕРїСЂРµРґРµР»СЏРµРј РєРѕР»РёС‡РµСЃС‚РІРѕ РёСЃРїРѕР»СЊР·СѓРµРјС‹С… СЃС‚СЂРѕРє
     int count = MAX_ADDR - 1;
     while (count >= 0 && X584Form->Code[count] == NOP && X584Form->CodeListView->Items->Item[count]->SubItems->Strings[2] == "")
         count--;
     count++;
-    //создаем и настраиваем таблицу
+    //СЃРѕР·РґР°РµРј Рё РЅР°СЃС‚СЂР°РёРІР°РµРј С‚Р°Р±Р»РёС†Сѓ
     X584Form->WordApplication->Selection->Font->Size = 12;
     X584Form->WordApplication->Selection->Font->Italic = false;
     TVariant start = X584Form->WordApplication->Selection->Start;
@@ -50,8 +50,8 @@ void __fastcall TExportThread::Execute()
     table->Borders->set_Enable(true);
     table->Columns->Item(1)->Width = 50;
     table->Columns->Item(2)->Width = 250;
-    //заполняем заголовок
-    AnsiString Head[3] = {"Адрес", "Микроинструкция", "Комментарий"};
+    //Р·Р°РїРѕР»РЅСЏРµРј Р·Р°РіРѕР»РѕРІРѕРє
+    AnsiString Head[3] = {"РђРґСЂРµСЃ", "РњРёРєСЂРѕРёРЅСЃС‚СЂСѓРєС†РёСЏ", "РљРѕРјРјРµРЅС‚Р°СЂРёР№"};
     for (int i = 0; i < 3; i++) {
         Range *range;
         table->Cell(1, i + 1)->get_Range(&range);
@@ -59,7 +59,7 @@ void __fastcall TExportThread::Execute()
         range->Font->set_Bold(true);
         range->InsertAfter(StringToOleStr(Head[i]));
     }
-    //заполняем поля таблицы
+    //Р·Р°РїРѕР»РЅСЏРµРј РїРѕР»СЏ С‚Р°Р±Р»РёС†С‹
     for (int i = 0; i < count; i++)
         for (int j = 0; j < 3; j++) {
             Range *range;
@@ -67,7 +67,7 @@ void __fastcall TExportThread::Execute()
             range->ParagraphFormat->Alignment = j ? wdAlignParagraphLeft : wdAlignParagraphCenter;
             range->InsertAfter(StringToOleStr(X584Form->CodeListView->Items->Item[i]->SubItems->Strings[j]));
         }
-    //показываем документ и завершаем работу
+    //РїРѕРєР°Р·С‹РІР°РµРј РґРѕРєСѓРјРµРЅС‚ Рё Р·Р°РІРµСЂС€Р°РµРј СЂР°Р±РѕС‚Сѓ
     X584Form->WordApplication->set_Visible(true);
     X584Form->WordDocument->Disconnect();
     X584Form->WordApplication->Disconnect();

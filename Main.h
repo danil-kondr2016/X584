@@ -199,23 +199,23 @@ __published:	// IDE-managed Components
     void __fastcall AboutItemClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations
-    K584 CPU;                           //объект процессора
-    unsigned Code[MAX_ADDR];            //массив инструкций
-    int Instruction;                    //индекс текущей инструкции
-    int OpFilter;                       //текущий фильтр операндов
-    int ResFilter;                      //текущий фильтр результата
-    TButton *ResButton;                 //предыдущая выделенная кнопка фильтра результатов
-    unsigned Regs[12];                  //регистры и шины
-    unsigned InFlags, OutFlags;         //входные и выходные флаги
-    int SelCount;                       //количество выделенных строк
-    unsigned MIClipboard[MAX_ADDR];     //буфер обмена для микроинструкций
-    AnsiString CMClipboard[MAX_ADDR];   //буфер обмена для комментариев
-    int ClipboardSize;                  //размер буфера обмена
-    bool Modified;                      //флаг изменений
-    int EditRow;                        //строка редактирования
-    TPoint EditPoint;                   //точка редактирования
-    bool Terminated;                    //флаг завершения выполнения
-    int OldInstruction;                 //прежняя выполняемая инструкция
+    K584 CPU;                           //РѕР±СЉРµРєС‚ РїСЂРѕС†РµСЃСЃРѕСЂР°
+    unsigned Code[MAX_ADDR];            //РјР°СЃСЃРёРІ РёРЅСЃС‚СЂСѓРєС†РёР№
+    int Instruction;                    //РёРЅРґРµРєСЃ С‚РµРєСѓС‰РµР№ РёРЅСЃС‚СЂСѓРєС†РёРё
+    int OpFilter;                       //С‚РµРєСѓС‰РёР№ С„РёР»СЊС‚СЂ РѕРїРµСЂР°РЅРґРѕРІ
+    int ResFilter;                      //С‚РµРєСѓС‰РёР№ С„РёР»СЊС‚СЂ СЂРµР·СѓР»СЊС‚Р°С‚Р°
+    TButton *ResButton;                 //РїСЂРµРґС‹РґСѓС‰Р°СЏ РІС‹РґРµР»РµРЅРЅР°СЏ РєРЅРѕРїРєР° С„РёР»СЊС‚СЂР° СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ
+    unsigned Regs[12];                  //СЂРµРіРёСЃС‚СЂС‹ Рё С€РёРЅС‹
+    unsigned InFlags, OutFlags;         //РІС…РѕРґРЅС‹Рµ Рё РІС‹С…РѕРґРЅС‹Рµ С„Р»Р°РіРё
+    int SelCount;                       //РєРѕР»РёС‡РµСЃС‚РІРѕ РІС‹РґРµР»РµРЅРЅС‹С… СЃС‚СЂРѕРє
+    unsigned MIClipboard[MAX_ADDR];     //Р±СѓС„РµСЂ РѕР±РјРµРЅР° РґР»СЏ РјРёРєСЂРѕРёРЅСЃС‚СЂСѓРєС†РёР№
+    AnsiString CMClipboard[MAX_ADDR];   //Р±СѓС„РµСЂ РѕР±РјРµРЅР° РґР»СЏ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ
+    int ClipboardSize;                  //СЂР°Р·РјРµСЂ Р±СѓС„РµСЂР° РѕР±РјРµРЅР°
+    bool Modified;                      //С„Р»Р°Рі РёР·РјРµРЅРµРЅРёР№
+    int EditRow;                        //СЃС‚СЂРѕРєР° СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
+    TPoint EditPoint;                   //С‚РѕС‡РєР° СЂРµРґР°РєС‚РёСЂРѕРІР°РЅРёСЏ
+    bool Terminated;                    //С„Р»Р°Рі Р·Р°РІРµСЂС€РµРЅРёСЏ РІС‹РїРѕР»РЅРµРЅРёСЏ
+    int OldInstruction;                 //РїСЂРµР¶РЅСЏСЏ РІС‹РїРѕР»РЅСЏРµРјР°СЏ РёРЅСЃС‚СЂСѓРєС†РёСЏ
     void LoadFile(AnsiString FileName);
     void SaveFile(AnsiString FileName);
     void SetModifyFlag(bool Flag);

@@ -19,7 +19,7 @@ void __fastcall TAboutForm::FormShow(TObject *Sender)
 {
     MEMORYSTATUS ms;
     GlobalMemoryStatus(&ms);
-    MemLabel->Caption = IntToStr(ms.dwTotalPhys / 1024) + " สม";
+    MemLabel->Caption = IntToStr(ms.dwTotalPhys / 1024) + " ะะ‘";
 }
 //---------------------------------------------------------------------------
 

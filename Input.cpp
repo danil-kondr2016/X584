@@ -15,14 +15,14 @@ __fastcall TInputForm::TInputForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TInputForm::RMaskEditKeyPress(TObject *Sender, char &Key)
 {
-    //фильтруем ненужные цифры
+    //С„РёР»СЊС‚СЂСѓРµРј РЅРµРЅСѓР¶РЅС‹Рµ С†РёС„СЂС‹
     if (Key >= '2' && Key <= '9')
         Key = 0;
 }
 //---------------------------------------------------------------------------
 void __fastcall TInputForm::RMaskEditChange(TObject *Sender)
 {
-    //форматируем текст
+    //С„РѕСЂРјР°С‚РёСЂСѓРµРј С‚РµРєСЃС‚
     AnsiString str = RMaskEdit->Text;
     for (int i = 1; i <= str.Length(); i++)
         if (str[i] == ' ' && i % 5 != 0)
@@ -32,7 +32,7 @@ void __fastcall TInputForm::RMaskEditChange(TObject *Sender)
         RMaskEdit->Text = str;
         RMaskEdit->SelStart = pos;
     }
-    //переводим в десятичную систему счисления
+    //РїРµСЂРµРІРѕРґРёРј РІ РґРµСЃСЏС‚РёС‡РЅСѓСЋ СЃРёСЃС‚РµРјСѓ СЃС‡РёСЃР»РµРЅРёСЏ
     Value = 0;
     for (int i = 1, num = 1; i <= 19; i++)
         if (i % 5) {
@@ -45,7 +45,7 @@ void __fastcall TInputForm::RMaskEditChange(TObject *Sender)
 
 void __fastcall TInputForm::RDecMaskEditChange(TObject *Sender)
 {
-    //получаем и форматируем значение поля
+    //РїРѕР»СѓС‡Р°РµРј Рё С„РѕСЂРјР°С‚РёСЂСѓРµРј Р·РЅР°С‡РµРЅРёРµ РїРѕР»СЏ
     AnsiString str = RDecMaskEdit->Text;
     for (int i = 1; i <= str.Length(); i++)
         if (str[i] == ' ')
@@ -61,7 +61,7 @@ void __fastcall TInputForm::RDecMaskEditChange(TObject *Sender)
         RDecMaskEdit->Text = str;
         RDecMaskEdit->SelStart = pos;
     }
-    //отображаем его в двоичном виде на флажках и в поле ввода
+    //РѕС‚РѕР±СЂР°Р¶Р°РµРј РµРіРѕ РІ РґРІРѕРёС‡РЅРѕРј РІРёРґРµ РЅР° С„Р»Р°Р¶РєР°С… Рё РІ РїРѕР»Рµ РІРІРѕРґР°
     str = "";
     for (int i = 15; i >= 0; i--) {
         TCheckBox *CheckBox = dynamic_cast<TCheckBox *>(FindComponent("CheckBox" + IntToStr(i)));
@@ -80,7 +80,7 @@ void __fastcall TInputForm::RDecMaskEditChange(TObject *Sender)
 
 void __fastcall TInputForm::CheckBoxClick(TObject *Sender)
 {
-    //переводим в десятичную систему счисления
+    //РїРµСЂРµРІРѕРґРёРј РІ РґРµСЃСЏС‚РёС‡РЅСѓСЋ СЃРёСЃС‚РµРјСѓ СЃС‡РёСЃР»РµРЅРёСЏ
     Value = 0;
     for (int i = 0; i < 16; i++)
         Value += dynamic_cast<TCheckBox *>(FindComponent("CheckBox" + IntToStr(i)))->Checked ? 1 << i : 0;

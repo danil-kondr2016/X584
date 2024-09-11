@@ -82,8 +82,8 @@ K584::K584(int _BitsCount)
         iSet[i].BitMask = 0;
         for (int j = 0; j < 9; j++)
             if (iSet[i].BitField[j] == '0' || iSet[i].BitField[j] == '1') {
-                iSet[i].BitValue |= (iSet[i].BitField[j] == '1' ? 1 : 0) << 8 - j;
-                iSet[i].BitMask |= 1 << 8 - j;
+                iSet[i].BitValue |= (iSet[i].BitField[j] == '1' ? 1 : 0) << (8 - j);
+                iSet[i].BitMask |= 1 << (8 - j);
             }
     }
 }
@@ -213,18 +213,18 @@ void K584::Shift(InstrType Op, int ResType, unsigned &Result, unsigned InFlags, 
     OutFlags |= F_INVSL1 | F_INVSR1 | F_INVSL2 | F_INVSR2;
     Result &= BitMask;
     XWR &= BitMask;
-    unsigned bit, sign = Result & 1 << BitsCount - 1;
+    unsigned bit, sign = Result & 1 << (BitsCount - 1);
     switch (Op) {
     case TYPE_SAL:
         OutFlags ^= sign ? F_INVSL1 : 0;
         Result <<= 1;
         if (ResType == OP_WRXWR) {
-            bit = (InFlags & F_P0 ? XWR >> BitsCount - 1 : XWR >> BitsCount - 2) & 0x01;
+            bit = (InFlags & F_P0 ? XWR >> (BitsCount - 1) : XWR >> (BitsCount - 2)) & 0x01;
             XWR <<= 1;
             Result |= bit;
             OutFlags ^= bit ? F_INVSL2 | F_INVSR1 : 0;
             if (!(InFlags & F_P0))
-                XWR = XWR & ~(1 << BitsCount - 1) | (Result & 1 << BitsCount - 1);
+                XWR = XWR & ~(1 << (BitsCount - 1)) | (Result & 1 << (BitsCount - 1));
         }
         break;
 
@@ -236,10 +236,10 @@ void K584::Shift(InstrType Op, int ResType, unsigned &Result, unsigned InFlags, 
             OutFlags ^= (XWR & 0x01 ? F_INVSR2 : 0) | (bit ? F_INVSL2 : 0);
             XWR >>= 1;
             if (InFlags & F_P0)
-                XWR |= bit << BitsCount - 1;
+                XWR |= bit << (BitsCount - 1);
             else {
                 XWR |= sign;
-                XWR = XWR & ~(1 << BitsCount - 2) | (bit << BitsCount - 2);
+                XWR = XWR & ~(1 << (BitsCount - 2)) | (bit << (BitsCount - 2));
             }
         }
         break;
@@ -248,7 +248,7 @@ void K584::Shift(InstrType Op, int ResType, unsigned &Result, unsigned InFlags, 
         OutFlags ^= sign ? F_INVSL1 : 0;
         Result <<= 1;
         if (ResType == OP_WRXWR) {
-            bit = XWR >> BitsCount - 1 & 0x01;
+            bit = XWR >> (BitsCount - 1) & 0x01;
             OutFlags ^= bit ? F_INVSL2 | F_INVSR1 : 0;
             XWR <<= 1;
             Result |= bit;
@@ -262,19 +262,19 @@ void K584::Shift(InstrType Op, int ResType, unsigned &Result, unsigned InFlags, 
         if (ResType == OP_WRXWR) {
             OutFlags ^= (XWR & 0x01 ? F_INVSR2 : 0) | (bit ? F_INVSL2 : 0);
             XWR >>= 1;
-            XWR |= bit << BitsCount - 1;
+            XWR |= bit << (BitsCount - 1);
         }
         break;
 
     case TYPE_SCL:
         if (ResType == OP_WRXWR) {
-            bit = XWR >> BitsCount - 1 & 0x01;
+            bit = XWR >> (BitsCount - 1) & 0x01;
             OutFlags ^= (sign ? F_INVSL1 | F_INVSR2 : 0) | (bit ? F_INVSR1 | F_INVSL2 : 0);
             Result = Result << 1 | bit;
-            XWR = XWR << 1 | sign >> BitsCount - 1;
+            XWR = XWR << 1 | sign >> (BitsCount - 1);
         } else {
             OutFlags ^= sign ? F_INVSL1 | F_INVSR1 : 0;
-            Result = Result << 1 | sign >> BitsCount - 1;
+            Result = Result << 1 | sign >> (BitsCount - 1);
         }
         break;
 
@@ -283,11 +283,11 @@ void K584::Shift(InstrType Op, int ResType, unsigned &Result, unsigned InFlags, 
         if (ResType == OP_WRXWR) {
             bit = XWR & 0x01;
             OutFlags ^= (sign ? F_INVSR1 | F_INVSL2 : 0) | (bit ? F_INVSR2 | F_INVSL1 : 0);
-            Result = Result >> 1 | bit << BitsCount - 1;
-            XWR = XWR >> 1 | sign << BitsCount - 1;
+            Result = Result >> 1 | bit << (BitsCount - 1);
+            XWR = XWR >> 1 | sign << (BitsCount - 1);
         } else {
             OutFlags ^= sign ? F_INVSL1 | F_INVSR1 : 0;
-            Result = Result >> 1 | sign << BitsCount - 1;
+            Result = Result >> 1 | sign << (BitsCount - 1);
         }
         break;
     }
@@ -355,8 +355,8 @@ bool K584::Format(unsigned MI, char *Str, bool FormatALU, bool FormatReg, bool S
 bool K584::FindOperand(int Index, int Type, unsigned MI)
 {
     //ищем указанный операнд в списке
-    for (int i = 0; i < iSet[Index].OpCount; i++)
-        if ((iSet[Index].Operands[i] & F_MMASK) == Type)
+    for (int i = 0; i < iSet[Index].OpCount; i++) {
+        if ((iSet[Index].Operands[i] & F_MMASK) == Type) {
             if (iSet[Index].Type == TYPE_ALU) {
                 //операция АЛУ - проверяем, используется ли реально операнд
                 unsigned op = MI >> 5 & 0x0F;
@@ -377,8 +377,11 @@ bool K584::FindOperand(int Index, int Type, unsigned MI)
                 default:
                     return false;
                 }
-            } else
+            } else {
                 return true;
+            }
+        }
+    }
     //если операнд - ПАЛУ, то проверяем, не встречается ли он в арифметической операции
     if (Type == OP_CARRY && iSet[Index].Type == TYPE_ALU)
         return (MI >> 5 & 0x0F) < 8;
@@ -457,10 +460,10 @@ bool K584::Execute(unsigned MI, unsigned DI, unsigned &DO, unsigned &DA, unsigne
             //выдаем содержимое буферных регистров шина адреса и XWR
             DA = BufDA;
             OutFlags |= BufXWR & 0x01 ? F_XWR0 : 0;
-            OutFlags |= BufXWR & 1 << BitsCount - 1 ? F_XWR3 : 0;
+            OutFlags |= BufXWR & 1 << (BitsCount - 1) ? F_XWR3 : 0;
             //выдаем старшие биты шин A и B
-            OutFlags |= (Ops[0] & 1 << BitsCount - 1 ? F_A3 : 0) |
-                        (Ops[1] & 1 << BitsCount - 1 ? F_B3 : 0);
+            OutFlags |= (Ops[0] & 1 << (BitsCount - 1) ? F_A3 : 0) |
+                        (Ops[1] & 1 << (BitsCount - 1) ? F_B3 : 0);
             //заполняем буферные регистры
             BufDA = InFlags & F_PR ? Reg[7] : (iSet[i].OutWR ? WR : XWR);
             BufXWR = XWR;

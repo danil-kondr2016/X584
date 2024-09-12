@@ -329,7 +329,7 @@ bool TX584Form::ParseComment(AnsiString str, int &Instruction)
     } else if (token == "GOTO" || token == "ИДИ_НА") { // вот так правильно
         //читаем адрес перехода и проверяем, что больше нет других лексем
         int Addr;
-        if (!TryStrToInt(NextWord(str, pos), Addr) || Addr < 0 || Addr >= 1024 || NextWord(str, pos) != "")
+        if (!TryStrToInt(NextWord(str, pos), Addr) || Addr < 0 || Addr >= MAX_ADDR || NextWord(str, pos) != "")
             return false;
         //выполняем безусловный переход
         Instruction = Addr;
@@ -787,7 +787,7 @@ void __fastcall TX584Form::CodeListViewDragDrop(TObject *Sender,
 }
 
 //---------------------------------------------------------------------------
-//                      *** ДЕРЕВО МИКРОИНСТУКЦИЙ ***
+//                     *** ДЕРЕВО МИКРОИНСТРУКЦИЙ ***
 //---------------------------------------------------------------------------
 
 void __fastcall TX584Form::CodeTreeViewChange(TObject *Sender,

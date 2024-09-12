@@ -324,7 +324,9 @@ bool TX584Form::ParseComment(AnsiString str, int &Instruction)
         //выполняем ветвление
         Instruction = OutFlags & flag ? TrueAddr : FalseAddr;
         return true;
-    } else if (token == "GOTO" || "ИДИ_НА") { // ;-)
+    // Товарищи, это так не работает - Д.А.К.
+    //} else if (token == "GOTO" || "ИДИ_НА") { // ;-)
+    } else if (token == "GOTO" || token == "ИДИ_НА") { // вот так правильно
         //читаем адрес перехода и проверяем, что больше нет других лексем
         int Addr;
         if (!TryStrToInt(NextWord(str, pos), Addr) || Addr < 0 || Addr >= 1024 || NextWord(str, pos) != "")

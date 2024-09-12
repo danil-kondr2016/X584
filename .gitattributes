@@ -1,2 +1,3 @@
 *.cpp   text working-tree-encoding=CP1251 eol=crlf
 *.h     text working-tree-encoding=CP1251 eol=crlf
+*.dfm   text eol=crlf

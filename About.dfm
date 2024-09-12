@@ -1,9 +1,9 @@
 object AboutForm: TAboutForm
-  Left = 190
-  Top = 110
+  Left = 1296
+  Top = 234
   BorderStyle = bsDialog
   Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
-  ClientHeight = 349
+  ClientHeight = 413
   ClientWidth = 424
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -90,9 +90,9 @@ object AboutForm: TAboutForm
   object Label1: TLabel
     Left = 56
     Top = 64
-    Width = 88
+    Width = 160
     Height = 13
-    Caption = 'X584 '#1074#1077#1088#1089#1080#1103' 1.28'
+    Caption = 'X584 '#1074#1077#1088#1089#1080#1103' 1.28.1 (2024-09-12)'
   end
   object Label2: TLabel
     Left = 56
@@ -447,33 +447,18 @@ object AboutForm: TAboutForm
   end
   object Label7: TLabel
     Left = 56
-    Top = 192
-    Width = 326
+    Top = 288
+    Width = 72
     Height = 13
-    Caption = #1042#1089#1077' '#1079#1072#1084#1077#1095#1072#1085#1080#1103' '#1080' '#1087#1088#1077#1076#1083#1086#1078#1077#1085#1080#1103' '#1087#1088#1086#1089#1100#1073#1072' '#1085#1072#1087#1088#1072#1074#1083#1103#1090#1100' '#1087#1086' '#1072#1076#1088#1077#1089#1072#1084
-  end
-  object MailLabel1: TLabel
-    Left = 72
-    Top = 216
-    Width = 91
-    Height = 16
-    Cursor = crHandPoint
-    Caption = 'toiffel@inbox.ru'
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clBlue
-    Font.Height = -13
-    Font.Name = 'MS Sans Serif'
-    Font.Style = [fsUnderline]
-    ParentFont = False
-    OnClick = MailLabelClick
+    Caption = #1056#1077#1087#1086#1079#1080#1090#1086#1088#1080#1081': '
   end
   object MailLabel2: TLabel
     Left = 72
-    Top = 232
-    Width = 75
+    Top = 264
+    Width = 172
     Height = 16
     Cursor = crHandPoint
-    Caption = 'rryu@mail.ru'
+    Caption = 'dan.kondratenko2013@ya.ru'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlue
     Font.Height = -13
@@ -484,17 +469,59 @@ object AboutForm: TAboutForm
   end
   object MemCaptionLabel: TLabel
     Left = 56
-    Top = 288
+    Top = 352
     Width = 162
     Height = 13
     Caption = #1044#1086#1089#1090#1091#1087#1085#1072#1103' '#1092#1080#1079#1080#1095#1077#1089#1082#1072#1103' '#1087#1072#1084#1103#1090#1100':'
   end
   object MemLabel: TLabel
     Left = 240
-    Top = 288
+    Top = 352
     Width = 53
     Height = 13
     Caption = '131072 '#1050#1041
+  end
+  object Label8: TLabel
+    Left = 72
+    Top = 216
+    Width = 298
+    Height = 13
+    Caption = #1044#1072#1085#1080#1083#1072' '#1040'. '#1050#1086#1085#1076#1088#1072#1090#1077#1085#1082#1086'                     '#1075#1088'. '#1048#1042#1058'-221'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object Label9: TLabel
+    Left = 56
+    Top = 192
+    Width = 201
+    Height = 13
+    Caption = #1054#1096#1080#1073#1082#1080' '#1074' '#1087#1088#1086#1075#1088#1072#1084#1084#1085#1086#1084' '#1082#1086#1076#1077' '#1080#1089#1087#1088#1072#1074#1080#1083
+  end
+  object Label10: TLabel
+    Left = 56
+    Top = 240
+    Width = 317
+    Height = 13
+    Caption = #1042#1089#1077' '#1079#1072#1084#1077#1095#1072#1085#1080#1103' '#1080' '#1087#1088#1077#1076#1083#1086#1078#1077#1085#1080#1103' '#1087#1088#1086#1089#1100#1073#1072' '#1085#1072#1087#1088#1072#1074#1083#1103#1090#1100' '#1087#1086' '#1072#1076#1088#1077#1089#1091
+  end
+  object Label11: TLabel
+    Left = 136
+    Top = 288
+    Width = 236
+    Height = 16
+    Cursor = crHandPoint
+    Caption = 'https://github.com/danil-kondr2016/X584'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlue
+    Font.Height = -13
+    Font.Name = 'MS Sans Serif'
+    Font.Style = [fsUnderline]
+    ParentFont = False
+    OnClick = LinkClick
   end
   object HeaderPanel: TPanel
     Left = 0
@@ -626,7 +653,7 @@ object AboutForm: TAboutForm
   end
   object Panel1: TPanel
     Left = 40
-    Top = 264
+    Top = 328
     Width = 361
     Height = 2
     BevelOuter = bvLowered
@@ -634,7 +661,7 @@ object AboutForm: TAboutForm
   end
   object OKButton: TButton
     Left = 336
-    Top = 312
+    Top = 376
     Width = 75
     Height = 25
     Caption = '&OK'

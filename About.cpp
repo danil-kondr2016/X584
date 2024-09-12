@@ -30,3 +30,12 @@ void __fastcall TAboutForm::MailLabelClick(TObject *Sender)
     ShellExecute(NULL, NULL, url, NULL, NULL, 0);
 }
 //---------------------------------------------------------------------------
+
+void __fastcall TAboutForm::LinkClick(TObject *Sender)
+{
+    char url[256] = {0};
+    strcat(url, dynamic_cast<TLabel *>(Sender)->Caption.c_str());
+    ShellExecute(NULL, NULL, url, NULL, NULL, 0);
+}
+//---------------------------------------------------------------------------
+

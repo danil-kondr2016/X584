@@ -529,7 +529,7 @@ void __fastcall TX584Form::CodeListViewCustomDrawItem(
       bool &DefaultDraw)
 {
     //прекращаем редактирование
-    InputEditExit(this);
+    //InputEditExit(this);
     TRect Rect = Item->DisplayRect(drBounds);
     //рисуем часть корешка
     LeftImageList->Draw(CodeListView->Canvas, Rect.Left, Rect.Top, Item->Index == Instruction ?

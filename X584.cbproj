@@ -166,8 +166,8 @@
         <LinkPackageImports>rtl.bpi;vcl.bpi;bcboffice2k.bpi;vclwinx.bpi;vclimg.bpi;bindengine.bpi</LinkPackageImports>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <Icon_MainIcon>Graphics\Icon.ico</Icon_MainIcon>
-        <VerInfo_Keys>CompanyName=;FileDescription=A simulator of K584VM1 processor;FileVersion=1.32.0.0;InternalName=X584;LegalCopyright=(c) X584 developers, 2005-2024;LegalTrademarks=;OriginalFilename=X584.exe;ProgramID=;ProductName=X584;ProductVersion=1.32.0.0;Comments=</VerInfo_Keys>
-        <VerInfo_MinorVer>32</VerInfo_MinorVer>
+        <VerInfo_Keys>CompanyName=;FileDescription=A simulator of K584VM1 processor;FileVersion=2.0.0.0;InternalName=X584 v2.0-beta;LegalCopyright=(c) X584 developers, 2005-2024;LegalTrademarks=;OriginalFilename=X584.exe;ProgramID=;ProductName=X584;ProductVersion=2.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_MajorVer>2</VerInfo_MajorVer>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win64)'!=''">
         <AppDPIAwarenessMode>PerMonitorV2</AppDPIAwarenessMode>
@@ -271,11 +271,9 @@
                 </Source>
                 <Excluded_Packages>
                     <Excluded_Packages Name="$(BDSBIN)\bcbofficexp290.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2K290.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp290.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </CPlusPlusBuilder.Personality>
-            <Deployment Version="5">
+            <Deployment Version="4">
                 <DeployFile Condition="'$(DynamicRTL)'=='true'" LocalName="$(BDS)\Redist\osx32\libcgcrtl.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
                         <Overwrite>true</Overwrite>
@@ -354,6 +352,16 @@
                     </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="AndroidClasses">
+                    <Platform Name="Android">
+                        <RemoteDir>classes</RemoteDir>
+                        <Operation>64</Operation>
+                    </Platform>
+                    <Platform Name="Android64">
+                        <RemoteDir>classes</RemoteDir>
+                        <Operation>64</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidFileProvider">

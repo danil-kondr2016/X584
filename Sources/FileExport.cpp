@@ -57,7 +57,7 @@ void __fastcall TExportThread::Execute()
     X584Form->WordApplication->Selection->TypeText(StringToOleStr(L"Время создания: " + TimeToStr(dt) + L"\n\n"));
     //определяем количество используемых строк
     int count = MAX_ADDR - 1;
-    while (count >= 0 && X584Form->Code[count] == NOP && X584Form->CodeListView->Items->Item[count]->SubItems->Strings[2] == L"")
+    while (count >= 0 && X584Form->Code[count] == NOP && X584Form->CodeListView->Items->Item[count]->SubItems->Strings[2] == L"" && X584Form->CodeListView->Items->Item[count]->SubItems->Strings[3] == L"")
         count--;
     count++;
     //создаем и настраиваем таблицу

@@ -17,9 +17,9 @@ object AboutForm: TAboutForm
   object VersionLabel: TLabel
     Left = 56
     Top = 64
-    Width = 190
+    Width = 199
     Height = 15
-    Caption = 'X584 '#1074#1077#1088#1089#1080#1103' 2.0.0-beta (2024-10-20)'
+    Caption = 'X584 '#1074#1077#1088#1089#1080#1103' 2.0.0-beta.1 (2024-10-20)'
   end
   object Label2: TLabel
     Left = 56

@@ -65,14 +65,15 @@ void __fastcall TExportThread::Execute()
     X584Form->WordApplication->Selection->Font->Italic = false;
     TVariant start = X584Form->WordApplication->Selection->Start;
     X584Form->WordDocument->Tables->Add(X584Form->WordDocument->Range(start, EmptyParam()),
-        count + 1, 3, EmptyParam(), EmptyParam());
+        count + 1, 4, EmptyParam(), EmptyParam());
     Table *table = X584Form->WordDocument->Tables->Item(1);
     table->Borders->set_Enable(true);
     table->Columns->Item(1)->Width = 50;
-    table->Columns->Item(2)->Width = 250;
+    table->Columns->Item(2)->Width = 150;
+    table->Columns->Item(3)->Width = 150;
     //заполняем заголовок
-    UnicodeString Head[3] = {L"Адрес", L"Микроинструкция", L"Комментарий"};
-    for (int i = 0; i < 3; i++) {
+    UnicodeString Head[4] = {L"Адрес", L"Микроинструкция", L"Управляющий оператор", L"Комментарий"};
+    for (int i = 0; i < 4; i++) {
         WordRange *range;
         table->Cell(1, i + 1)->get_Range(&range);
         range->ParagraphFormat->Alignment = WdParagraphAlignment::wdAlignParagraphCenter;
@@ -81,7 +82,7 @@ void __fastcall TExportThread::Execute()
     }
     //заполняем поля таблицы
     for (int i = 0; i < count; i++)
-        for (int j = 0; j < 3; j++) {
+        for (int j = 0; j < 4; j++) {
             WordRange *range;
             table->Cell(i + 2, j + 1)->get_Range(&range);
             range->ParagraphFormat->Alignment = j ? WdParagraphAlignment::wdAlignParagraphLeft : WdParagraphAlignment::wdAlignParagraphCenter;

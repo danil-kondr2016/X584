@@ -27,6 +27,7 @@
 #include "About.h"
 #include "FileExport.h"
 #include <Vcl.Clipbrd.hpp>
+#include <System.StrUtils.hpp>
 #include <memory>
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -207,7 +208,8 @@ void TX584Form::SaveFile(UnicodeString FileName)
             AnsiStringT<1251> comment = CodeListView->Items->Item[i]->SubItems->Strings[3];
             AnsiStringT<1251> str;
 
-            if (control.Length() > 0) {
+            unsigned Dummy;
+            if (control.Length() > 0 && !ParseInput(control, Dummy)) {
                 str = control;
             }
             else {
@@ -408,6 +410,52 @@ UnicodeString CorrectControlComment(UnicodeString cmt)
     return result;
 }
 
+bool TX584Form::ParseInput(UnicodeString str, unsigned &Number)
+{
+    int pos = 1;
+    UnicodeString token = NextWord(str, pos);
+    if (token != L"INPUT" && token != L"ВВОД") {
+        return false;
+    }
+
+    UnicodeString NumberString = str.SubString(pos, str.Length()-pos+1);
+    UnicodeString WithoutSpaces = AnsiLowerCase(ReplaceStr(NumberString.Trim(), L" ", L""));
+
+    Number = 0;
+    if (WithoutSpaces.Length() >= 16) {
+        // скорее всего, двоичные коды
+        int count = 0;
+        for (int i = 1; i <= NumberString.Length() && count < 16; i++) {
+            if (NumberString[i] == L' ') {
+                pos++;
+                continue;
+            }
+            if (NumberString[i] != L'0' && NumberString[i] != L'1')
+                return false;
+            Number = (Number << 1) | (NumberString[i] - L'0');
+            count++;
+            pos++;
+        }
+    }
+    else {
+        NumberString = LowerCase(NextWord(str, pos));
+        int SignedNumber;
+        if (!TryStrToInt(NumberString, SignedNumber))
+                return false;
+        if (SignedNumber < -32768 || SignedNumber > 65535) {
+            Number = 65535;
+        }
+        else if (SignedNumber < 0) {
+            Number = SignedNumber + 65536; // преобразовать в дополнительный код
+        }
+        else {
+            Number = SignedNumber;
+        }
+    }
+
+    return NextWord(str, pos) == L"";
+}
+
 bool TX584Form::ParseComment(UnicodeString str, int &Instruction)
 {
     int pos = 1;
@@ -545,14 +593,16 @@ void TX584Form::Run(int Mode)
                 find = true;
                 if (CPU.FindOperand(i, OP_IN, Code[Instruction])) {
                     ShowState();
-                    InputForm->RMaskEdit->Text = L"0000 0000 0000 0000";
-                    InputForm->RMaskEditChange(this);
-                    if (InputForm->ShowModal() == mrOk)
-                        DI = InputForm->Value;
-                    else
-                        //останавливаем выполнение
-                        goto Stop;
+                    if (!ParseInput(CodeListView->Items->Item[Instruction]->SubItems->Strings[2], DI)) {
+                        InputForm->RMaskEdit->Text = L"0000 0000 0000 0000";
+                        InputForm->RMaskEditChange(this);
+                        if (InputForm->ShowModal() == mrOk)
+                            DI = InputForm->Value;
+                        else
+                            //останавливаем выполнение
+                            goto Stop;
                     }
+                }
                 break;
             }
         //нашли инструкцию - выполняем

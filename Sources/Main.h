@@ -275,6 +275,7 @@ public:		// User declarations
     void EnableRunControls(bool Flag);
     void BuildTree(int OpFilter, int ResFilter);
     void DrawItem(int Index);
+    bool ParseInput(UnicodeString str, unsigned &Number);
     bool ParseComment(UnicodeString str, int &Instruction);
     void ShowState();
     void Run(int Mode);

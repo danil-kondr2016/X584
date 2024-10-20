@@ -54,9 +54,12 @@ object X584Form: TX584Form
         MinWidth = 100
         Width = 200
       end>
+    HideSelection = False
+    MultiSelect = True
     SmallImages = EmptyImageList
     TabOrder = 0
     ViewStyle = vsReport
+    OnAdvancedCustomDrawItem = CodeListViewAdvancedCustomDrawItem
     OnCustomDrawItem = CodeListViewCustomDrawItem
     OnDblClick = CodeListViewDblClick
     OnDragDrop = CodeListViewDragDrop

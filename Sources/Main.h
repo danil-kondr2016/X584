@@ -173,12 +173,15 @@ __published:	// IDE-managed Components
     TVirtualImageList *ButtonsImageList;
     TVirtualImageList *TreeImageList;
     void __fastcall FormCreate(TObject *Sender);
+    void __fastcall FormDestroy(TObject *Sender);
     void __fastcall FormResize(TObject *Sender);
     void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);
     void __fastcall ApplicationEventsHint(TObject *Sender);
     void __fastcall ApplicationEventsIdle(TObject *Sender, bool &Done);
     void __fastcall CodeListViewCustomDrawItem(TCustomListView *Sender,
           TListItem *Item, TCustomDrawState State, bool &DefaultDraw);
+    void __fastcall CodeListViewAdvancedCustomDrawItem(TCustomListView *Sender, TListItem *Item,
+          TCustomDrawState State, TCustomDrawStage Stage, bool &DefaultDraw);
     void __fastcall CodeListViewMouseDown(TObject *Sender,
           TMouseButton Button, TShiftState Shift, int X, int Y);
     void __fastcall CodeListViewDblClick(TObject *Sender);
@@ -224,13 +227,17 @@ __published:	// IDE-managed Components
     void __fastcall ResetItemClick(TObject *Sender);
     void __fastcall HelpItemClick(TObject *Sender);
     void __fastcall AboutItemClick(TObject *Sender);
-    void __fastcall FormDestroy(TObject *Sender);
 private:	// User declarations
-    void GetSelection(int &SelStart, int &SelEnd);
+    // Для обработки выбора элемента
+    void CopySelectedItems();
+    void ClearSelectedItems();
+    void RemoveSelectedItems();
+    void ClearSelection();
+    int PreviousSelected;
 
     TListItem *LastTopItem;
     int LastItemLeft;
-
+    
     // Для буфера обмена
     unsigned ClipboardFormat;
     void PutIntoClipboard();
@@ -248,7 +255,6 @@ public:		// User declarations
     TButton *ResButton;                 //предыдущая выделенная кнопка фильтра результатов
     unsigned Regs[12];                  //регистры и шины
     unsigned InFlags, OutFlags;         //входные и выходные флаги
-    int SelCount;                       //количество выделенных строк
     unsigned MIClipboard[MAX_ADDR];     //буфер обмена для микроинструкций
     UnicodeString CMClipboard[MAX_ADDR];//буфер обмена для комментариев
     int ClipboardSize;                  //размер буфера обмена

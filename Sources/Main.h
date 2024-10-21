@@ -42,6 +42,7 @@
 #include <Vcl.ImageCollection.hpp>
 #include <Vcl.VirtualImageList.hpp>
 #include <Winapi.Messages.hpp>
+#include <vector>
 //---------------------------------------------------------------------------
 
 #define MAX_ADDR        1024
@@ -229,6 +230,7 @@ __published:	// IDE-managed Components
     void __fastcall AboutItemClick(TObject *Sender);
 private:	// User declarations
     // Для обработки выбора элемента
+    std::vector<TListItem*> GetSelectedItems();
     void CopySelectedItems();
     void ClearSelectedItems();
     void RemoveSelectedItems();

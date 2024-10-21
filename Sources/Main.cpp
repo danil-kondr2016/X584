@@ -1362,11 +1362,10 @@ void TX584Form::ClearSelectedItems()
 
 void TX584Form::RemoveSelectedItems()
 {
-    int NewIndex = 0;
-    int OldIndex = 0;
+    int OldIndex, NewIndex;
 
-    for (; OldIndex < MAX_ADDR && NewIndex < MAX_ADDR; OldIndex++) {
-        if (CodeListView->Items->Item[OldIndex]->Selected) {
+    for (OldIndex = 0, NewIndex = 0; OldIndex < MAX_ADDR && NewIndex < MAX_ADDR; OldIndex++) {
+        if (!CodeListView->Items->Item[OldIndex]->Selected) {
             TListItem *ItemOld, *ItemNew;
             Code[NewIndex] = Code[OldIndex];
             ItemOld = CodeListView->Items->Item[OldIndex];

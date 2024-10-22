@@ -915,7 +915,6 @@ object X584Form: TX584Form
     Height = 21
     Constraints.MinWidth = 16
     Ctl3D = False
-    MaxLength = 128
     ParentCtl3D = False
     TabOrder = 10
     Visible = False

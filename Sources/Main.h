@@ -239,7 +239,7 @@ private:	// User declarations
 
     TListItem *LastTopItem;
     int LastItemLeft;
-    
+
     // Для буфера обмена
     unsigned ClipboardFormat;
     void PutIntoClipboard();

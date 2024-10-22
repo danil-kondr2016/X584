@@ -122,5 +122,3 @@ void __fastcall TInputForm::CheckBoxClick(TObject *Sender)
     RDecMaskEdit->Text = UnicodeString().sprintf(L"%05d", Value);
 }
 //---------------------------------------------------------------------------
-
-

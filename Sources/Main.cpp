@@ -1283,7 +1283,7 @@ void TX584Form::CopySelectedItems()
     for (size_t i = 0; i < Selected.size(); i++) {
         TListItem *Item = Selected[i];
         int Index = Item->Index;
-
+      
         MIClipboard[i] = Code[Index];
         CFClipboard[i] = Item->SubItems->Strings[2];
         CMClipboard[i] = Item->SubItems->Strings[3];
@@ -1370,7 +1370,7 @@ void TX584Form::RemoveSelectedItems()
             TListItem *NewItem = CodeListView->Items->Item[NewIndex];
             NewItem->SubItems->Strings[1] = OldItem->SubItems->Strings[1];
             NewItem->SubItems->Strings[2] = OldItem->SubItems->Strings[2];
-            ItemNew->SubItems->Strings[3] = ItemOld->SubItems->Strings[3];
+            NewItem->SubItems->Strings[3] = OldItem->SubItems->Strings[3];
             NewIndex++;
         }
     }

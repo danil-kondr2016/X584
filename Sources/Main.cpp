@@ -180,9 +180,6 @@ void TX584Form::LoadPRJ(TFileStream *Stream)
 }
 //---------------------------------------------------------------------------
 
-// Для обратной совместимости
-UnicodeString CorrectControlComment(UnicodeString cmt);
-
 void TX584Form::SaveFile(UnicodeString FileName)
 {
     try {
@@ -379,13 +376,14 @@ const UnicodeString EngFlagNames[12] = {L"ALUCOUT3", L"!WRLFT", L"!WRRT", L"!XWR
 const UnicodeString EngAltFlagNames[12] =  {L"C", L"!WRLFT", L"!WRRT", L"!XWRLFT", L"!XWRRT",
     L"XWR0", L"XWR3", L"A15", L"B15", L"C0", L"C1", L"C2"};
 
-UnicodeString CorrectControlComment(UnicodeString cmt)
+UnicodeString TX584Form::FixControlComment(UnicodeString cmt)
 {
     TReplaceFlags flags = TReplaceFlags() << rfReplaceAll << rfIgnoreCase;
     UnicodeString result = cmt;
 
     for (int i = 0; i < 12; i++) {
         result = StringReplace(result, L" " + EngFlagNames[i] + L" ", L" " + FlagNames[i] + L" ", flags);
+        // нужно, чтобы "A15" и "B15" не были заменены на их эквиваленты с русскими А и В
         if (EngAltFlagNames[i] != L"A15" && EngAltFlagNames[i] != L"B15") {
             result = StringReplace(result, L" " + EngAltFlagNames[i] + L" ", L" " + AltFlagNames[i] + L" ", flags);
         }

@@ -252,6 +252,8 @@ END_MESSAGE_MAP(TForm);
     // Для загрузки файлов
     void LoadX584(TFileStream *Stream);
     void LoadPRJ(TFileStream *Stream);
+
+    UnicodeString FixControlComment(UnicodeString cmt);
 public:		// User declarations
     K584 CPU;                           //объект процессора
     unsigned Code[MAX_ADDR];            //массив инструкций

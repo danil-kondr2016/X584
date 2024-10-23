@@ -193,7 +193,7 @@ void TX584Form::SaveFile(UnicodeString FileName)
             //сохраняем инструкцию
             Writer->Write(static_cast<unsigned short>(Code[i]));
             //сохраняем комментарий
-            int Dummy;
+            unsigned Dummy;
             UnicodeString control = CodeListView->Items->Item[i]->SubItems->Strings[2];
             UnicodeString comment = CodeListView->Items->Item[i]->SubItems->Strings[3];
             UnicodeString str = (control.Length() > 0 && !ParseInput(control, Dummy)) ? control : comment;
@@ -905,7 +905,8 @@ void __fastcall TX584Form::InputEditExit(TObject *Sender)
     //завершаем редактирование и перерисовываем строку
     if (InputEdit->Visible) {
         int Dummy;
-        if (EditColumn == 2 && InputEdit->Text.Length() && !ParseComment(InputEdit->Text, Dummy)) {
+        unsigned Dummy2;
+        if (EditColumn == 2 && InputEdit->Text.Length() && !ParseComment(InputEdit->Text, Dummy) && !ParseInput(InputEdit->Text, Dummy2)) {
             CodeListView->Scroll(CodeListView->TopItem->Left-LastItemLeft, LastTopItem->Top - CodeListView->TopItem->Top);
             throw Exception(L"Неверный управляющий оператор");
         }

@@ -59,17 +59,16 @@ unsigned ReCode[54] = {
 
 void TX584Form::LoadFile(UnicodeString FileName)
 {
-    TFileStream *Stream;
     try {
-        Stream = new TFileStream(FileName, fmOpenRead);
+        std::unique_ptr<TFileStream> Stream(new TFileStream(FileName, fmOpenRead));
         UnicodeString ext = UpperCase(ExtractFileExt(FileName));
 
         if (ext == L".X584") {
             //родной формат
-            LoadX584(Stream);
+            LoadX584(Stream.get());
         } else {
             //текстовый формат *.Prj
-            LoadPRJ(Stream);
+            LoadPRJ(Stream.get());
         }
         SetModifyFlag(false);
         ResetItemClick(this);
@@ -84,12 +83,11 @@ void TX584Form::LoadFile(UnicodeString FileName)
         MessageBoxW(Handle, (L"Ошибка открытия файла " + FileName).c_str(),
             L"Ошибка", MB_OK | MB_ICONERROR | MB_DEFBUTTON1 | MB_APPLMODAL);
     }
-    delete Stream;
 }
 
 void TX584Form::LoadX584(TFileStream *Stream)
 {
-    TBinaryReader *Reader = new TBinaryReader(Stream, TEncoding::UTF8, false);
+    std::unique_ptr<TBinaryReader> Reader(new TBinaryReader(Stream, TEncoding::UTF8, false));
     wchar_t buf[256];
     unsigned Sign;
     Sign = Reader->ReadUInt32();
@@ -103,13 +101,12 @@ void TX584Form::LoadX584(TFileStream *Stream)
         CodeListView->Items->Item[i]->SubItems->Strings[1] = buf;
         //загружаем комментарий
         unsigned char len;
-        char comment[256];
         len = Reader->ReadByte();
-        Stream->Read(comment, len);
-        comment[len] = 0;
+
+        TBytes comment = Reader->ReadBytes(len);
 
         int Dummy;
-        AnsiStringT<1251> commentStr(comment);
+        UnicodeString commentStr = TEncoding::GetEncoding(1251)->GetString(comment);
         if (ParseComment(commentStr, Dummy)) {
             CodeListView->Items->Item[i]->SubItems->Strings[2] = commentStr;
             CodeListView->Items->Item[i]->SubItems->Strings[3] = L"";
@@ -130,14 +127,12 @@ void TX584Form::LoadX584(TFileStream *Stream)
             CodeListView->Items->Item[i]->SubItems->Strings[3] = Reader->ReadString();
         }
     }
-
-    delete Reader;
 }
 
 void TX584Form::LoadPRJ(TFileStream *Stream)
 {
     wchar_t buf[256];
-    TStringList *List = new TStringList();
+    std::unique_ptr<TStringList> List(new TStringList());
     List->LoadFromStream(Stream, TEncoding::GetEncoding(1251));
     //проверяем заголовок
     if (List->Count < 2 || List->Strings[0] != PRJSTR1 || List->Strings[1] != PRJSTR2)
@@ -168,10 +163,10 @@ void TX584Form::LoadPRJ(TFileStream *Stream)
         UnicodeString comment = str.SubString(15, str.Length() - 14);
         int Dummy;
         if (ParseComment(comment, Dummy)) {
-            CodeListView->Items->Item[i]->SubItems->Strings[2] = str.SubString(15, str.Length() - 14);
+            CodeListView->Items->Item[i]->SubItems->Strings[2] = comment;
             CodeListView->Items->Item[i]->SubItems->Strings[3] = L"";
         } else {
-            CodeListView->Items->Item[i]->SubItems->Strings[3] = str.SubString(15, str.Length() - 14);
+            CodeListView->Items->Item[i]->SubItems->Strings[3] = comment;
             CodeListView->Items->Item[i]->SubItems->Strings[2] = L"";
         }
     }
@@ -182,7 +177,6 @@ void TX584Form::LoadPRJ(TFileStream *Stream)
         CodeListView->Items->Item[i]->SubItems->Strings[2] = L"";
         CodeListView->Items->Item[i]->SubItems->Strings[3] = L"";
     }
-    delete List;
 }
 //---------------------------------------------------------------------------
 
@@ -191,38 +185,30 @@ UnicodeString CorrectControlComment(UnicodeString cmt);
 
 void TX584Form::SaveFile(UnicodeString FileName)
 {
-    TFileStream *Stream;
-    TBinaryWriter *Writer;
-    try  {
-        Stream = new TFileStream(FileName, fmCreate);
-        Writer = new TBinaryWriter(Stream, TEncoding::UTF8, false);
+    try {
+        std::unique_ptr<TFileStream> Stream(new TFileStream(FileName, fmCreate));
+        std::unique_ptr<TBinaryWriter> Writer(new TBinaryWriter(Stream.get(), TEncoding::UTF8, false));
 
         //сохраняем в родном формате
         unsigned int Sign = X584;
         Writer->Write(Sign);
         for (int i = 0; i < MAX_ADDR; i++) {
             //сохраняем инструкцию
-            Stream->Write(&Code[i], 2);
+            Writer->Write(static_cast<unsigned short>(Code[i]));
             //сохраняем комментарий
-            AnsiStringT<1251> control = CorrectControlComment(CodeListView->Items->Item[i]->SubItems->Strings[2]);
-            AnsiStringT<1251> comment = CodeListView->Items->Item[i]->SubItems->Strings[3];
-            AnsiStringT<1251> str;
+            int Dummy;
+            UnicodeString control = CodeListView->Items->Item[i]->SubItems->Strings[2];
+            UnicodeString comment = CodeListView->Items->Item[i]->SubItems->Strings[3];
+            UnicodeString str = (control.Length() > 0 && !ParseInput(control, Dummy)) ? control : comment;
 
-            unsigned Dummy;
-            if (control.Length() > 0 && !ParseInput(control, Dummy)) {
-                str = control;
-            }
-            else {
-                str = comment;
-            }
-
-            if (str.Length() >= 255) {
-                str = str.SubString0(0, 255);
-            }
+            if (str.Length() > 255)
+                str.SetLength(255);
 
             unsigned char len = str.Length();
             Writer->Write(len);
-            Stream->Write(str.c_str(), len);
+
+            TBytes encodedStr = TEncoding::GetEncoding(1251)->GetBytes(str);
+            Writer->Write(encodedStr);
         }
 
         //сохраняем новые данные
@@ -241,8 +227,6 @@ void TX584Form::SaveFile(UnicodeString FileName)
         MessageBoxW(Handle, (L"Ошибка сохранения файла " + FileName).c_str(),
             L"Ошибка", MB_OK | MB_ICONERROR | MB_DEFBUTTON1 | MB_APPLMODAL);
     }
-    delete Writer;
-    delete Stream;
 }
 //---------------------------------------------------------------------------
 
@@ -842,7 +826,7 @@ void __fastcall TX584Form::CodeListViewMouseDown(TObject *Sender,
         }
         else {
             Rect.Left = Rect.Right;
-            Rect.Right += Rect.Left + CodeListView->Columns->Items[4]->Width;
+            Rect.Right = Rect.Left + CodeListView->Columns->Items[4]->Width;
             if (WasSelected && X >= Rect.Left && X <= Rect.Right) {
                 //щелкнули в области колонки комментариев - запускаем таймер редактирования
                 EditRow = Row;
@@ -922,6 +906,11 @@ void __fastcall TX584Form::InputEditExit(TObject *Sender)
 {
     //завершаем редактирование и перерисовываем строку
     if (InputEdit->Visible) {
+        int Dummy;
+        if (EditColumn == 2 && InputEdit->Text.Length() && !ParseComment(InputEdit->Text, Dummy)) {
+            CodeListView->Scroll(CodeListView->TopItem->Left-LastItemLeft, LastTopItem->Top - CodeListView->TopItem->Top);
+            throw Exception(L"Неверный управляющий оператор");
+        }
         CodeListView->Items->Item[EditRow]->SubItems->Strings[EditColumn] = InputEdit->Text;
         InputEdit->Visible = false;
         CodeListView->SetFocus();

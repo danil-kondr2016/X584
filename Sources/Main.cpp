@@ -61,7 +61,7 @@ void TX584Form::LoadFile(UnicodeString FileName)
 {
     try {
         std::unique_ptr<TFileStream> Stream(new TFileStream(FileName, fmOpenRead));
-        UnicodeString ext = UpperCase(ExtractFileExt(FileName));
+        UnicodeString ext = AnsiUpperCase(ExtractFileExt(FileName));
 
         if (ext == L".X584") {
             //родной формат
@@ -88,21 +88,18 @@ void TX584Form::LoadFile(UnicodeString FileName)
 void TX584Form::LoadX584(TFileStream *Stream)
 {
     std::unique_ptr<TBinaryReader> Reader(new TBinaryReader(Stream, TEncoding::UTF8, false));
-    wchar_t buf[256];
-    unsigned Sign;
-    Sign = Reader->ReadUInt32();
+    unsigned Sign = Reader->ReadUInt32();
     if (Sign != X584)
         throw EConvertError(L"Неверный формат");
     for (int i = 0; i < MAX_ADDR; i++) {
         //загружаем код микроинструкции
         Code[i] = Reader->ReadUInt16();
         //форматируем его
+        wchar_t buf[64];
         CPU.Format(Code[i], buf);
         CodeListView->Items->Item[i]->SubItems->Strings[1] = buf;
         //загружаем комментарий
-        unsigned char len;
-        len = Reader->ReadByte();
-
+        unsigned char len = Reader->ReadByte();
         TBytes comment = Reader->ReadBytes(len);
 
         int Dummy;
@@ -131,12 +128,11 @@ void TX584Form::LoadX584(TFileStream *Stream)
 
 void TX584Form::LoadPRJ(TFileStream *Stream)
 {
-    wchar_t buf[256];
     std::unique_ptr<TStringList> List(new TStringList());
     List->LoadFromStream(Stream, TEncoding::GetEncoding(1251));
     //проверяем заголовок
     if (List->Count < 2 || List->Strings[0] != PRJSTR1 || List->Strings[1] != PRJSTR2)
-        throw EConvertError(L"");
+        throw EConvertError(L"Неверный формат");
     //читаем все оставшиеся строки
     for (int i = 0; i < List->Count - 2; i++) {
         //читаем поля микроинструкции
@@ -157,6 +153,7 @@ void TX584Form::LoadPRJ(TFileStream *Stream)
             opcode |= CPU.FindOperand(ReCode[code], OP_CARRY, opcode) ? ATTR_CUSED : 0;
         //записываем микроинструкцию в редактор кода
         Code[i] = opcode;
+        wchar_t buf[64];
         CPU.Format(opcode, buf);
         CodeListView->Items->Item[i]->SubItems->Strings[1] = buf;
 
@@ -198,13 +195,12 @@ void TX584Form::SaveFile(UnicodeString FileName)
             UnicodeString comment = CodeListView->Items->Item[i]->SubItems->Strings[3];
             UnicodeString str = (control.Length() > 0 && !ParseInput(control, Dummy)) ? control : comment;
 
-            if (str.Length() > 255)
-                str.SetLength(255);
-
-            unsigned char len = str.Length();
-            Writer->Write(len);
-
             TBytes encodedStr = TEncoding::GetEncoding(1251)->GetBytes(str);
+            if (encodedStr.Length > 255)
+                encodedStr.Length = 255;
+
+            unsigned char len = encodedStr.Length;
+            Writer->Write(len);
             Writer->Write(encodedStr);
         }
 
@@ -907,10 +903,11 @@ void __fastcall TX584Form::InputEditExit(TObject *Sender)
         int Dummy;
         unsigned Dummy2;
         if (EditColumn == 2 && InputEdit->Text.Length() && !ParseComment(InputEdit->Text, Dummy) && !ParseInput(InputEdit->Text, Dummy2)) {
-            CodeListView->Scroll(CodeListView->TopItem->Left-LastItemLeft, LastTopItem->Top - CodeListView->TopItem->Top);
-            throw Exception(L"Неверный управляющий оператор");
+            MessageBoxW(Handle, L"Введен неверный управляющий оператор",
+                L"Ошибка", MB_OK | MB_ICONERROR | MB_DEFBUTTON1 | MB_APPLMODAL);
+        } else {
+            CodeListView->Items->Item[EditRow]->SubItems->Strings[EditColumn] = InputEdit->Text;
         }
-        CodeListView->Items->Item[EditRow]->SubItems->Strings[EditColumn] = InputEdit->Text;
         InputEdit->Visible = false;
         CodeListView->SetFocus();
     }

@@ -371,9 +371,9 @@ const UnicodeString FlagNames[12] = {L"ПАЛУ3", L"!СДЛ1", L"!СДП1", L"!
     L"РРР0", L"РРР3", L"A15", L"B15", L"ПАЛУ0", L"ПАЛУ1", L"ПАЛУ2"};
 const UnicodeString AltFlagNames[12] = {L"П", L"!СДЛ1", L"!СДП1", L"!СДЛ2", L"!СДП2",
     L"РРР0", L"РРР3", L"А15", L"В15", L"П0", L"П1", L"П2"};
-const UnicodeString EngFlagNames[12] = {L"ALUCOUT3", L"!WRLFT", L"!WRRT", L"!XWRLFT", L"!XWRRT",
-    L"XWR0", L"XWR3", L"A15", L"B15", L"ALUCOUT0", L"ALUCOUT1", L"ALUCOUT2"};
-const UnicodeString EngAltFlagNames[12] =  {L"C", L"!WRLFT", L"!WRRT", L"!XWRLFT", L"!XWRRT",
+const UnicodeString EngFlagNames[12] = {L"CO3", L"!SL1", L"!SR1", L"!SL2", L"!SR2",
+    L"XWR0", L"XWR3", L"A15", L"B15", L"CO0", L"CO1", L"CO2"};
+const UnicodeString EngAltFlagNames[12] =  {L"C",  L"!SL1", L"!SR1", L"!SL2", L"!SR2",
     L"XWR0", L"XWR3", L"A15", L"B15", L"C0", L"C1", L"C2"};
 
 UnicodeString TX584Form::FixControlComment(UnicodeString cmt)
